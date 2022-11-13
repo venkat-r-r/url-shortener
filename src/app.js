@@ -1,6 +1,5 @@
 const express = require ('express');
 
-const conn = require ('./mysql').conn;
 const UrlShortener = require ('./handler').UrlShortener;
 const {hostname, port} = require ('./data/config');
 
@@ -9,10 +8,7 @@ app.use(express.json())
 
 const urlShortener = new UrlShortener ();
 
-// conn.connect((err)=> {
-//     if (err) throw err;
-//     console.log('Connected to Database');
-// });
+app.get ('/', (req, res) => res.sendFile ('./views/home.html', {root: __dirname}));
 
 app.get ('/:alias', (req, res) => {
     try {
@@ -20,10 +16,7 @@ app.get ('/:alias', (req, res) => {
         res.redirect (url);
     }
     catch (error) {
-        res.status (404).send ({
-            error: error.message,
-            alias: req.params.alias
-        });
+        res.sendFile ('./views/invalid.html', {root: __dirname})
     }
 });
 
