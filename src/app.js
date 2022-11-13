@@ -37,9 +37,8 @@ app.post ('/', (req, res) => {
         });
     }
     catch (error) {
-        res.status (400).send ({
+        res.status (409).send ({
             error: error.message,
-            url: data.url,
             alias: data.alias || ''
         });
     }
