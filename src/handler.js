@@ -8,65 +8,52 @@ class UrlShortener {
         let alias;
         do {
             alias = Math.random().toString(36).slice (3);
-        } while (this.#isAvailable (alias));
+        } while (this.urls.hasOwnProperty (alias));
         return alias;
     }
     
-    #isAvailable = function (alias) {
-        return this.urls.hasOwnProperty (alias);
+    #validateAlias = function (alias) {
+        if (this.urls.hasOwnProperty (alias)) {
+            throw new Error (`[${alias}] is not available`);
+        }
+        return alias;
     }
 
-    #isValidURL (str) {
+    #validateUrl (str) {
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
             '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
             '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
             '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
             '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-        return !!pattern.test(str);
-    }
-
-    getUrl = function (req, res) {
-        const alias = req.params.alias;
-        if (this.#isAvailable (alias)) {
-            res.status (200).send ({
-                alias,
-                url: `${this.urls [alias]}`
-            });
-        }
-        else {
-            res.status (404).send ({
-                alias,
-                message: `URL does not exist`
-            });
+        if (!pattern.test(str)) {
+            throw new Error ('Invalid URL received');
         }
     }
 
-    saveUrl = function (req, res) {
-        const url = req.body.url;
-        if (!this.#isValidURL (url)) {
-            res.status (400).send ({
-                url,
-                message: 'Invalid URL received'
-            });
-            return;
+    getUrl = function (alias) {
+        if (this.urls.hasOwnProperty (alias)) {
+            return this.urls [alias]
         }
-        const alias = req.body.alias || this.#generateUniqueAlias ();
-        if (this.#isAvailable (alias)) {
-            res.status (409).send ({
-                message: `[${alias}] is not available`
-            });
+        throw new Error ('URL does not exist');
+    }
+
+    saveUrl = function (data) {
+        const url = data.url;
+        let alias = data.alias;
+
+        this.#validateUrl (url);
+        if (alias) {
+            this.#validateAlias (alias);
         }
         else {
-            // save URL
-            this.urls [alias] = url;
-
-            res.status (201).send ({
-                alias,
-                shortUrl: `${baseUrl}/${alias}`
-            });
+            alias = this.#generateUniqueAlias ();
         }
+        
+        // save URL
+        this.urls [alias] = url;
 
+        return alias;
     }
 
 }
