@@ -1,15 +1,17 @@
 const mysql = require("mysql");
 const dbConfig = require('../data/config').dbConfig;
+const Logger = require ('../utilities/logger').Logger;
 
-
+const log = new Logger ('connection.js');
 const conn = mysql.createConnection(dbConfig);
 
 conn.connect ((err) => {
+  const prefix = 'conn.connect ()';
   if (err) {
-    console.log ('Failed to connect to database', err);
+    log.error (prefix, `Unable to connect - ${err.toString ()}`);
   }
   else {
-    console.log ('Connected to database');
+    log.info (prefix, 'Connected to database');
   }
 })
 

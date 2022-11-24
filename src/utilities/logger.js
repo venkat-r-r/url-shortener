@@ -9,7 +9,7 @@ function Logger (label) {
             }),
             format.timestamp ({format: 'DD-MM-YYYY HH:mm:ss'}),
             format.printf (({level, message, label, timestamp}) => {
-                return `${timestamp} ${level} [${label}] ${message}`;
+                return `${timestamp} [${level}] ${label} -> ${message}`;
             }),
         ),
         transports: [
