@@ -1,7 +1,7 @@
 const express = require ('express');
 const router = express.Router ();
 
-const urlShortener = require ('../services/handler');
+const urlShortener = require ('../services/urlShortener');
 
 router.get ('/', (_, res) => res.sendFile ( './views/home.html', {root: __dirname}));
 
@@ -19,13 +19,13 @@ router.get ('/:alias', async (req, res) => {
 router.post ('/', async (req, res) => {
     const data = req.body;
     try {
-        const alias = await urlShortener.saveUrl (data);
+        const alias = await urlShortener.saveUrl (data.alias, data.url);
         res.status (201).send ({
             alias
         });
     }
     catch (error) {
-        console.error (JSON.stringify (error, null, 2));
+        console.error (error.toString ());
         res.status (409).send ({
             error: error.message,
             alias: data.alias || ''

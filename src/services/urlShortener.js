@@ -20,21 +20,34 @@ function urlShortener () {
         return alias;
     };
 
-    const getUrl = async (alias) => (await mysqlQueries.getUrl (alias))[0]['url'];
+    const getUrl = async (alias) => {
+        if (await mysqlQueries.isAliasExists (alias)){
+            return (await mysqlQueries.getUrl (alias))[0]['url'];
+        }
+        throw `Alias [${alias}] does not exist`;
+    };
 
     const saveUrl = async (alias, url) => {
-        if (isUrlValid (alias)) {
+        if (isUrlValid (url)) {
             if (alias === undefined) {
                 if (await mysqlQueries.isUrlExists (url)) {
-                    alias = (await mysqlQueries.getAlias (url))[0]['alias'];     
+                    alias = (await mysqlQueries.getAlias (url))[0]['alias'];
+                    return alias;
                 }
                 else {
                     alias = await generateAlias ();
-                    await mysqlQueries.saveUrl (alias, url);
                 }
-                return alias;
             }
+            else {
+                if (await mysqlQueries.isAliasExists (alias)) {
+                    throw  new Error (`Alias [${alias}] unavailable`);
+                }
+            }
+            await mysqlQueries.saveUrl (alias, url);
+            return alias;
         }
+        throw new Error (`URL [${url}] invalid`);
+
     };
 
     return {getUrl, saveUrl};
