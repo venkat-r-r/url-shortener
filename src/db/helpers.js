@@ -1,7 +1,16 @@
 const mysqlConnection = require ('./connection');
 
+/**
+ * @description helper functions to execute any sql query
+ * @returns {*}
+ */
 function MySqlHelpers () {
 
+    /**
+     * @description execute given query
+     * @param {string} [sqlQuery] SQL query to execute
+     * @returns {*}
+     */
     const executeQuery = async (sqlQuery) => {
         try {
             const result = await runQuery (mysqlConnection, sqlQuery).then (results => results);
@@ -13,6 +22,12 @@ function MySqlHelpers () {
         }
     };
 
+    /**
+     * @description helper function for above function (executeQuery)
+     * @param {*} [conn] MySql connection object
+     * @param {string} [sqlQuery] SQL query to execute
+     * @returns {Promise}
+     */
     const runQuery = async (conn, sqlQuery) => {
         return new Promise ((resolve, reject) => {
             conn.query (sqlQuery, (err, result) => {

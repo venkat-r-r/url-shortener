@@ -1,8 +1,10 @@
 const { createLogger, format, transports } = require('winston');
+const logConfig = require ('../data/config').logger;
 
 function Logger (label) {
 
     const logger = createLogger ({
+        level: logConfig.logLevel,
         format: format.combine (
             format.label ({
                 label

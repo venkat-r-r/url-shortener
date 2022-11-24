@@ -11,5 +11,8 @@ module.exports = {
     serverConfig: {
         hostname: process.env.hostname,
         port: process.env.port
+    },
+    logger: {
+        logLevel: process.env.log_level
     }
 };

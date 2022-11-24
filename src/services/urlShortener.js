@@ -2,6 +2,7 @@ const mysqlQueries = require ('../db/sqlQueries');
 
 function urlShortener () {
 
+    // RegExp object to validate URL
     const pattern = new RegExp (
         '^(https?:\\/\\/)?'+ // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -12,8 +13,17 @@ function urlShortener () {
         'i' // case insensitive
     );
 
+    /**
+     * @description check if the provided string is url or not
+     * @param {string} [url] string representing URL
+     * @returns boolean
+     */
     const isUrlValid = (url) => !!pattern.test (url);
 
+    /**
+     * @description Generate a unique alias
+     * @returns alias
+     */
     const generateAlias = async () => {
         let alias;
         do {
@@ -22,6 +32,11 @@ function urlShortener () {
         return alias;
     };
 
+    /**
+     * @description retrieve url for given alias
+     * @param {string} [alias] alias for which URL was mapped
+     * @returns url if alias exists
+     */
     const getUrl = async (alias) => {
         if (await mysqlQueries.isAliasExists (alias)){
             return (await mysqlQueries.getUrl (alias))[0]['url'];
@@ -29,7 +44,13 @@ function urlShortener () {
         throw `Alias [${alias}] does not exist`;
     };
 
-    const saveUrl = async (alias, url) => {
+    /**
+     * @description store URL and alias
+     * @param {string} [url] actual URL to map with given alias
+     * @param {string} [alias] small string to represent the long URL (optional)
+     * @returns 
+     */
+    const saveUrl = async (url, alias) => {
         if (isUrlValid (url)) {
             if (alias === undefined) {
                 if (await mysqlQueries.isUrlExists (url)) {

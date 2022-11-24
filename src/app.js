@@ -5,6 +5,7 @@ const router = require ('./router/router');
 const Logger = require ('./utilities/logger').Logger;
 
 const log = new Logger ('app.js');
+
 const app = express ();
 app.use(express.json());
 
