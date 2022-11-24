@@ -1,7 +1,7 @@
 require ('dotenv').config ();
 
 module.exports = {
-    dbConfig : {
+    dbConfig: {
         host: process.env.db_hostname,
         port: process.env.db_port,
         user: process.env.db_user,
