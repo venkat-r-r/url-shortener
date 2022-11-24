@@ -1,4 +1,4 @@
-const executeQuery = require ('./mysqlUtility').executeQuery;
+const executeQuery = require ('./helpers').executeQuery;
 
 function MySqlQueries () {
 

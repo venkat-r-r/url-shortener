@@ -1,10 +1,10 @@
-const conn = require ('./connection');
+const mysqlConnection = require ('./connection');
 
-function MySqlDatabase () {
+function MySqlHelpers () {
 
     const executeQuery = async (sqlQuery) => {
         try {
-            const result = await runQuery (conn, sqlQuery).then (results => results);
+            const result = await runQuery (mysqlConnection, sqlQuery).then (results => results);
             return result;
         }
         catch (err) {
@@ -29,4 +29,4 @@ function MySqlDatabase () {
     return {executeQuery};
 }
 
-module.exports = MySqlDatabase ();
+module.exports = MySqlHelpers ();
