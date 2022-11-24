@@ -1,4 +1,5 @@
 const express = require ('express');
+// eslint-disable-next-line new-cap
 const router = express.Router ();
 
 const urlShortener = require ('../services/urlShortener');
@@ -13,10 +14,9 @@ router.get ('/:alias', async (req, res) => {
     try {
         log.debug (prefix, `alias: ${req.params.alias}`);
         res.redirect (`${await urlShortener.getUrl (req.params.alias)}`);
-    }
-    catch (error) {
+    } catch (error) {
         log.error (prefix, JSON.stringify (error, null, 2));
-        res.sendFile ('./views/invalid.html', {root: __dirname})
+        res.sendFile ('./views/invalid.html', {root: __dirname});
     }
 });
 
@@ -29,8 +29,7 @@ router.post ('/', async (req, res) => {
         res.status (201).send ({
             alias
         });
-    }
-    catch (error) {
+    } catch (error) {
         log.error (prefix, error.message);
         res.status (409).send ({
             error: error.message,

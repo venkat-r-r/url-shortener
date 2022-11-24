@@ -1,6 +1,10 @@
 const mysqlQueries = require ('../db/sqlQueries');
 
-function urlShortener () {
+/**
+ * @description function to retrieve and store urls
+ * @return {*}
+ */
+function urlShortener() {
 
     // RegExp object to validate URL
     const pattern = new RegExp (
@@ -16,18 +20,18 @@ function urlShortener () {
     /**
      * @description check if the provided string is url or not
      * @param {string} [url] string representing URL
-     * @returns boolean
+     * @return {boolean}
      */
     const isUrlValid = (url) => !!pattern.test (url);
 
     /**
      * @description Generate a unique alias
-     * @returns alias
+     * @return {string} alias
      */
     const generateAlias = async () => {
         let alias;
         do {
-            alias = Math.random().toString(36).slice (3);
+            alias = Math.random ().toString (36).slice (3);
         } while (await mysqlQueries.isAliasExists (alias));
         return alias;
     };
@@ -35,20 +39,20 @@ function urlShortener () {
     /**
      * @description retrieve url for given alias
      * @param {string} [alias] alias for which URL was mapped
-     * @returns url if alias exists
+     * @return {string} url if alias exists
      */
     const getUrl = async (alias) => {
-        if (await mysqlQueries.isAliasExists (alias)){
+        if (await mysqlQueries.isAliasExists (alias)) {
             return (await mysqlQueries.getUrl (alias))[0]['url'];
         }
-        throw `Alias [${alias}] does not exist`;
+        throw Error (`Alias [${alias}] does not exist`);
     };
 
     /**
      * @description store URL and alias
      * @param {string} [url] actual URL to map with given alias
      * @param {string} [alias] small string to represent the long URL (optional)
-     * @returns 
+     * @return {string} either generated or specified alias
      */
     const saveUrl = async (url, alias) => {
         if (isUrlValid (url)) {
@@ -56,21 +60,18 @@ function urlShortener () {
                 if (await mysqlQueries.isUrlExists (url)) {
                     alias = (await mysqlQueries.getAlias (url))[0]['alias'];
                     return alias;
-                }
-                else {
+                } else {
                     alias = await generateAlias ();
                 }
-            }
-            else {
+            } else {
                 if (await mysqlQueries.isAliasExists (alias)) {
-                    throw  new Error (`Alias [${alias}] unavailable`);
+                    throw new Error (`Alias [${alias}] unavailable`);
                 }
             }
             await mysqlQueries.saveUrl (alias, url);
             return alias;
         }
         throw new Error (`URL [${url}] invalid`);
-
     };
 
     return {getUrl, saveUrl};

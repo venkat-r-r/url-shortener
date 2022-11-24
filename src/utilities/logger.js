@@ -1,7 +1,11 @@
-const { createLogger, format, transports } = require('winston');
+const {createLogger, format, transports} = require ('winston');
 const logConfig = require ('../data/config').logger;
 
-function Logger (label) {
+/**
+ * @description Custom logger
+ * @param {string} label
+ */
+function Logger(label) {
 
     const logger = createLogger ({
         level: logConfig.logLevel,
@@ -12,15 +16,15 @@ function Logger (label) {
             format.timestamp ({format: 'DD-MM-YYYY HH:mm:ss'}),
             format.printf (({level, message, label, timestamp}) => {
                 return `${timestamp} [${level}] ${label} -> ${message}`;
-            }),
+            })
         ),
         transports: [
-            new transports.Console(),
-            new transports.File({ filename: 'logs/combined.log' })
+            new transports.Console (),
+            new transports.File ({filename: 'logs/combined.log'})
         ]
     });
 
-    const getMessage = (label, message) => `[${label}]: ${message}`
+    const getMessage = (label, message) => `[${label}]: ${message}`;
 
     this.info = (label, message) => logger.info (getMessage (label, message));
     this.error = (label, message) => logger.error (getMessage (label, message));
