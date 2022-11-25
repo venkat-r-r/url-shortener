@@ -8,7 +8,7 @@ const logConfig = require ('../data/config').logger;
 function Logger(label) {
 
     const logger = createLogger ({
-        level: logConfig.logLevel,
+        level: logConfig?.logLevel || 'info',
         format: format.combine (
             format.label ({
                 label

@@ -1,4 +1,7 @@
 const mysqlConnection = require ('./connection');
+const Logger = require ('../utilities/logger').Logger;
+
+const log = new Logger ('helper.js');
 
 /**
  * @description helper functions to execute any sql query
@@ -12,11 +15,13 @@ function mySqlHelpers() {
      * @return {*}
      */
     const executeQuery = async (sqlQuery) => {
+        const prefix = 'executeQuery';
         try {
             const result = await runQuery (mysqlConnection, sqlQuery).then ((results) => results);
+            log.debug (prefix, `query '${sqlQuery}' result:\n${JSON.stringify (result, null, 2)}`);
             return result;
         } catch (err) {
-            console.log (JSON.stringify (err, null, 2));
+            log.error (prefix, err.toString ());
             return null;
         }
     };
