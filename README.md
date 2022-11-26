@@ -1,7 +1,7 @@
-# url-shortener
+# url-shortener ✂️
 shorten long URLs
 
-## Development environment setup
+## Development environment setup ⚙️
 - run `npm install`
 - create .dev_env file in root directory
 - add below env variables with your values
@@ -27,7 +27,7 @@ shorten long URLs
   ```
   npm run start:dev
   ```
-## consume the API
+## consume the API 🎈
 - GET /alias => redirects to url which is mapped to given alias
 - POST / => maps the url to alias if provided or generates a random short string and returns the alias
   ```
