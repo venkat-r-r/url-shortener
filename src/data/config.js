@@ -21,4 +21,4 @@ module.exports = {
 
 const log = new (require ('../utilities/logger').Logger) ('config.js');
 console.log (process.cwd ());
-log.info ('NODE_ENV', `Started in '${process.env.NODE_ENV || 'dev'}' environment in [${process.env.LOG_LEVEL}] mode`);
+log.info ('NODE_ENV', `Started in '${process.env.environment}' environment in [${process.env.LOG_LEVEL}] mode`);
