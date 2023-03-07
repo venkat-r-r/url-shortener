@@ -1,10 +1,12 @@
 node_modules
 
 # dynamic files
-logs
+logs/**.**
 package-lock.json
 
 # environment variables
 .env
 .dev_env
 .prod_env
+
+!**/.gitkeep

@@ -3,9 +3,16 @@ const logConfig = require ('../data/config').logger;
 
 /**
  * @description Custom logger
- * @param {string} label
+ * @param {string} [label]
+ * @param {string} [filename] (optional)
  */
 function Logger(label) {
+
+    const _transports = [];
+    _transports.push (new transports.Console ());
+    if (process.env.LOG_FILEPATH) {
+        _transports.push (new transports.File (`logs/${process.env.LOG_FILEPATH}`));
+    }
 
     const logger = createLogger ({
         level: logConfig?.logLevel || 'info',
@@ -18,13 +25,10 @@ function Logger(label) {
                 return `${timestamp} [${level}] ${label} -> ${message}`;
             })
         ),
-        transports: [
-            new transports.Console (),
-            new transports.File ({filename: 'logs/combined.log'})
-        ]
+        transports: _transports
     });
 
-    const getMessage = (label, message) => `[${label}]: ${message}`;
+    const getMessage = (prefix, message) => `[${prefix}]: ${message}`;
 
     this.info = (label, message) => logger.info (getMessage (label, message));
     this.error = (label, message) => logger.error (getMessage (label, message));
