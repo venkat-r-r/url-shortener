@@ -11,7 +11,7 @@ function Logger(label) {
     const _transports = [];
     _transports.push (new transports.Console ());
     if (process.env.LOG_FILEPATH) {
-        _transports.push (new transports.File (`logs/${process.env.LOG_FILEPATH}`));
+        _transports.push (new transports.File ({filename: `logs/${process.env.LOG_FILEPATH}`}));
     }
 
     const logger = createLogger ({

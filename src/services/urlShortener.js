@@ -18,7 +18,7 @@ function urlShortener() {
     );
 
     // RegExp object represents 'alias' pattern
-    const aliasPattern = new RegExp ('[a-zA-Z0-9]{5, 8}', i);
+    const aliasPattern = new RegExp ('[a-zA-Z0-9]{5, 8}', 'i');
 
     /**
      * @description check if the provided string is url or not
