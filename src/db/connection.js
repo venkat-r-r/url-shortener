@@ -1,18 +1,30 @@
-const mysql = require ('mysql');
+const mysql = require ('mysql2/promise');
 const dbConfig = require ('../data/config').dbConfig;
 const Logger = require ('../utilities/logger').Logger;
 
 const log = new Logger ('connection.js');
-const conn = mysql.createConnection (dbConfig);
 
-conn.connect ((err) => {
-
-    const prefix = 'conn.connect ()';
-    if (err) {
-        log.error (prefix, `Unable to connect - ${err.toString ()}`);
-    } else {
-        log.info (prefix, 'Connected to database');
+async function initPoolWithRetry(config, retries = 10, delayMs = 5000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const pool = mysql.createPool(config);
+      // Simple "SELECT 1" to confirm connection works
+      await pool.query('SELECT 1');
+      console.log(`DB connected on attempt ${attempt}`);
+      return pool;
+    } catch (err) {
+      console.error(`DB connection failed (attempt ${attempt}): ${err.message}`);
+      if (attempt === retries) throw err;
+      await new Promise(res => setTimeout(res, delayMs));
     }
+  }
+}
+
+const poolPromise = initPoolWithRetry({
+  ...dbConfig,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-module.exports = conn;
+module.exports = poolPromise;

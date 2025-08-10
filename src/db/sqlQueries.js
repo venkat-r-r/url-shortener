@@ -46,7 +46,15 @@ function mySqlQueries() {
     const saveUrl = async (alias, url) =>
         (await executeQuery (`INSERT INTO urls (alias, url) values ('${alias}', '${url}')`));
 
-    return {getAlias, getUrl, saveUrl, isAliasExists, isUrlExists};
+    /**
+     * @description delete a row with given alias from urls table 
+     * @param {string} [alias]
+     * @returns
+     */
+    const deleteAlias = async (alias) =>
+        (await executeQuery (`DELETE FROM urls WHERE alias = '${alias}'`));
+
+    return {deleteAlias, getAlias, getUrl, saveUrl, isAliasExists, isUrlExists};
 }
 
 module.exports = mySqlQueries ();
