@@ -81,7 +81,7 @@ function urlShortener() {
         throw new Error (`URL [${url}] invalid`);
     };
 
-    return {getUrl, saveUrl};
+    return {getUrl, saveUrl, deleteAlias};
 }
 
 module.exports = urlShortener ();

@@ -48,7 +48,7 @@ router.delete ('/:alias', async (req, res) => {
             throw new Error ('Invalid request');
         }
         log.debug (prefix, `alias: ${req.params.alias}`);
-        await urlShortener.deleteAlias (alias);
+        await urlShortener.deleteAlias (req.params.alias);
         res.status (204).send ();
     } catch (error) {
         log.error (prefix, error.toString ());
