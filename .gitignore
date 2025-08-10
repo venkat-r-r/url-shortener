@@ -1,6 +1,10 @@
 node_modules
-logs
 
+# dynamic files
+logs
+package-lock.json
+
+# environment variables
 .env
 .dev_env
 .prod_env

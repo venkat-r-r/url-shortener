@@ -4,6 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "build": "npm run lint",
+    "lint": "npm run lint:js",
+    "lint:js": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "NODE_ENV=development nodemon ./src/app.js",
     "start:prod": "NODE_ENV=production nodemon ./src/app.js"
