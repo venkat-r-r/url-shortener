@@ -36,6 +36,13 @@ function urlShortener() {
         return alias;
     };
 
+    const deleteAlias = async (alias) => {
+        if (await mysqlQueries.isAliasExists (alias)) {
+            return await mysqlQueries.deleteAlias (alias);
+        }
+        throw Error (`Alias [${alias}] does not exist`);
+    }
+
     /**
      * @description retrieve url for given alias
      * @param {string} [alias] alias for which URL was mapped
@@ -74,7 +81,7 @@ function urlShortener() {
         throw new Error (`URL [${url}] invalid`);
     };
 
-    return {getUrl, saveUrl};
+    return {getUrl, saveUrl, deleteAlias};
 }
 
 module.exports = urlShortener ();

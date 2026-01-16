@@ -10,10 +10,10 @@ const log = new Logger ('router.js');
 router.get ('/:alias', async (req, res) => {
     const prefix = 'GET request';
     try {
-        log.debug (prefix, `alias: ${req.params.alias}`);
         if (!req.params.alias) {
             throw new Error ('Invalid request');
         }
+        log.debug (prefix, `alias: ${req.params.alias}`);
         res.redirect (`${await urlShortener.getUrl (req.params.alias)}`);
     } catch (error) {
         log.error (prefix, error.toString ());
@@ -37,6 +37,23 @@ router.post ('/', async (req, res) => {
         res.status (409).send ({
             error: error.message,
             alias: data.alias || ''
+        });
+    }
+});
+
+router.delete ('/:alias', async (req, res) => {
+    const prefix = 'DELETE request';
+    try {
+        if (!req.params.alias) {
+            throw new Error ('Invalid request');
+        }
+        log.debug (prefix, `alias: ${req.params.alias}`);
+        await urlShortener.deleteAlias (req.params.alias);
+        res.status (204).send ();
+    } catch (error) {
+        log.error (prefix, error.toString ());
+        res.status (404).send ({
+            error: error.message
         });
     }
 });
